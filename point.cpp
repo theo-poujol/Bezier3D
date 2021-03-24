@@ -87,6 +87,17 @@ void Point::set(const float * t)
 		coords[i] = t[i];
 }
 
+void Point::setRgb(const float *rgb) {
+    for(int i = 0; i < 3; i++) {
+        this->rgb[i] = rgb[i];
+    }
+}
+
+void Point::setRgb(float red, float green, float blue) {
+    this->rgb[0] = red;
+    this->rgb[1] = green;
+    this->rgb[2] = blue;
+}
 
 void Point::makeObject(QVector<GLfloat> *vertex_data){
     vertex_data->append(getX());
@@ -129,6 +140,30 @@ Point& Point::operator= (const Point &p)
 	for (unsigned i=0; i<3; ++i)
 		coords[i] = p.coords[i];
 
-return *this;
+    return *this;
+}
+
+Point& Point::operator+= (const Point &p) {
+    for (unsigned i=0; i<3; ++i) {
+        coords[i] += p.coords[i];
+    }
+    return *this;
+}
+
+Point operator+ (const Point &p1, const Point &p2) {
+    Point sum_p;
+    for (unsigned i=0; i<3; ++i){
+        sum_p.coords[i] = p1.coords[i] + p2.coords[i];
+        sum_p.rgb[i] = ( p1.rgb[i] + p2.coords[i] )/2;
+    }
+    return sum_p;
+}
+
+Point operator* (const float &f, const Point &p) {
+    Point mul_p;
+    for (unsigned i=0; i<3; ++i){
+        mul_p.coords[i] = f*  p.coords[i];
+    }
+    return mul_p;
 }
 

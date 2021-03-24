@@ -26,24 +26,35 @@ public:
     Point(float x, float y, float z, float red, float green, float blue);
 
     /* Opérateurs de calculs entre deux points */
-	Point& operator= (const Point &);
+    Point& operator= (const Point &p);
     Point& operator+= (const Point &p);
+    friend Point operator+ (const Point &p1, const Point &p2);
+    friend Point operator* (const float &f, const Point &p);
 
+
+    /* GETTERS : Coordonnées */
 	float getN(unsigned) const;
 	float getX() const;
 	float getY() const;
 	float getZ() const ;
+    void get(float *) const;
     float * getCoords();
-    float * getRgb();
-	void get(float *) const;
 
+    /* GETTER : Rgb */
+    float * getRgb();
+
+    /* SETTERS : Coordonnées */
 	void setN(unsigned, const float&);
 	void setX(const float&);
 	void setY(const float&);
 	void setZ(const float&);
 	void set(const float *);
-    void setColor(const float * t);
-    void setColor(float red, float green, float blue);
+
+
+    /* SETTERS : Rgb */
+    void setRgb(const float * t);
+    void setRgb(float red, float green, float blue);
+
     void makeObject(QVector<GLfloat> *vertex_data);
     void makeObjectSingle(QVector<GLfloat> *vertex_data);
 

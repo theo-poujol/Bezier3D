@@ -17,12 +17,20 @@ public:
     void createControlSegment();
     void swapGridSurface(bool showGrid);
     void update();
+    void createPointList();
 
     /** FONCTIONS VECTEURS **/
 
     QVector<float> subVec(QVector<float> p1, QVector<float> p2);
     QVector<float> mulVec(QVector<float> p1, QVector<float> p2);
-    float scalar(std::vector<float> p1, std::vector<float> p2);
+    float scalar(QVector<float>  p1, QVector<float>  p2);
+
+    float getAngle(float a);
+    QVector<float> increaseRate(float a);
+    QVector<float> bezier(float a);
+    int factorial(int f);
+    float bersteinPolynomial(float u, float i, float n);
+    Point* bezierArea(float u, float v, int n, int m);
 
     /** SETTERS **/
     void setControlPointColor();

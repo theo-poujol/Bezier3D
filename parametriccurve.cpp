@@ -72,3 +72,20 @@ int ParametricCurve::factorial(int f) {
     return (f == 1 || f == 0) ? 1 : factorial(f - 1) * f;
 }
 
+
+float ParametricCurve::bersteinPolynomial(float u, float i, float n) {
+    float firstPart = factorial(n)/(factorial(i) * factorial(n-i));
+    float secondPart = pow(u,i) *pow(1-u,n-i);
+    return firstPart*secondPart;
+}
+
+Point* ParametricCurve::bezierArea(float u, float v, int n, int m) {
+    Point *p= new Point(0, 0, 0, this->red, this->green, this->blue);
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            *p += (bersteinPolynomial(u, i, n-1) * bersteinPolynomial(v, j, m-1)) * control_pts[n*j+i];
+        }
+    }
+    return p;
+}

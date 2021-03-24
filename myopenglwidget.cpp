@@ -116,7 +116,7 @@ void myOpenGLWidget::makeGLObjects()
     }
 
     int decal=0;
-        QVector<GLfloat> vertData;
+        QVector<float> vertData;
         if(showInterval){
             G= curve->bezierArea(u, v, control_x, control_y);
             G->setRgb(1,0,1);
@@ -133,7 +133,7 @@ void myOpenGLWidget::makeGLObjects()
         m_vbo.create();
         m_vbo.bind();
         //qDebug() << "vertData " << vertData.count () << " " << vertData.data ();
-        m_vbo.allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
+        m_vbo.allocate(vertData.constData(), vertData.count() * sizeof(float));
 }
 
 
@@ -189,9 +189,9 @@ void myOpenGLWidget::paintGL()
             m_program->setUniformValue("matrix", m);
             m_program->setUniformValue("norMatrix", normal_mat);
 
-            m_program->setAttributeBuffer("posAttr", GL_FLOAT, 0 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
-            m_program->setAttributeBuffer("colAttr", GL_FLOAT, 3 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
-            m_program->setAttributeBuffer("norAttr", GL_FLOAT, 6 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+            m_program->setAttributeBuffer("posAttr", GL_FLOAT, 0 * sizeof(float), 3, 9 * sizeof(float));
+            m_program->setAttributeBuffer("colAttr", GL_FLOAT, 3 * sizeof(float), 3, 9 * sizeof(float));
+            m_program->setAttributeBuffer("norAttr", GL_FLOAT, 6 * sizeof(float), 3, 9 * sizeof(float));
             m_program->enableAttributeArray("posAttr");
             m_program->enableAttributeArray("colAttr");
             m_program->enableAttributeArray("norAttr");

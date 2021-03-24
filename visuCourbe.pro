@@ -28,15 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     myopenglwidget.cpp \
     parametriccurve.cpp \
-    segment.cpp \
-    point.cpp
+    point.cpp \
+    segment.cpp
 
 HEADERS += \
         mainwindow.h \
     myopenglwidget.h \
     parametriccurve.h \
-    segment.h \
-    point.h
+    point.h \
+    segment.h
 
 FORMS += \
         mainwindow.ui

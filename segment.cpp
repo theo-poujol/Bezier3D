@@ -1,6 +1,6 @@
 #include <cmath>
-
 #include "segment.h"
+
 
 Segment::Segment()
 {
@@ -17,6 +17,7 @@ Segment::~Segment()
 Segment::Segment(const Segment & s)
 {
 	pointList = new Point[2];
+
 
 	for (unsigned i=0; i<2; ++i)
 		pointList[i] = s.pointList[i];
@@ -77,40 +78,44 @@ float Segment::length() const
 
 void Segment::createSegment(QVector<GLfloat> *vertData)
 {
+
+
+    std::cout << " ici  : " << this->pointList[0].getX()<< std::endl;
+
     GLfloat vertices[6];
-    GLfloat colors[6];
+        GLfloat colors[6];
 
-    //VStart
-    vertices[0] = getStart().getX();
-    vertices[1] = getStart().getY();
-    vertices[2] = getStart().getZ();
+        //VStart
+        vertices[0] = this->pointList[0].getX();
+        vertices[1] = this->pointList[0].getY();
+        vertices[2] = this->pointList[0].getZ();
 
-    //VEnd
-    vertices[3] = getEnd().getX();
-    vertices[4] = getEnd().getY();
-    vertices[5] = getEnd().getZ();
+        //VEnd
+        vertices[3] = this->pointList[1].getX();
+        vertices[4] = this->pointList[1].getY();
+        vertices[5] = this->pointList[1].getZ();
 
-    //CStart
-    colors[0] = getStart().getRgb()[0];
-    colors[1] = getStart().getRgb()[0];
-    colors[2] = getStart().getRgb()[0];
+        //CStart
+        colors[0] = this->pointList[0].getRgb()[0];
+        colors[1] = this->pointList[0].getRgb()[1];
+        colors[2] = this->pointList[0].getRgb()[2];
 
-    //CEnd
-    colors[3] = getEnd().getRgb()[0];
-    colors[4] = getEnd().getRgb()[0];
-    colors[5] = getEnd().getRgb()[0];
+        //CEnd
+        colors[3] = this->pointList[1].getRgb()[0];
+        colors[4] = this->pointList[1].getRgb()[1];
+        colors[5] = this->pointList[1].getRgb()[2];
 
-    for (int i = 0; i < 2; ++i) { //2 sommets
-        // coordonnées sommets
-        for (int j = 0; j < 3; j++) //3 coords par sommet
-            vertData->append(vertices[i*3+j]);
-        // couleurs sommets
-        for (int j = 0; j < 3; j++) //1 RGB par sommet
-            vertData->append(colors[i*3+j]*10);
+        for (int i = 0; i < 2; ++i) { //2 sommets
+            // coordonnées sommets
+            for (int j = 0; j < 3; j++) //3 coords par sommet
+                vertData->append(vertices[i*3+j]);
+            // couleurs sommets
+            for (int j = 0; j < 3; j++) //1 RGB par sommet
+                vertData->append(colors[i*3+j]*10);
 
-        for (int j = 0; j < 3; j++) //1 RGB par sommet
-            vertData->append(0);
-    }
+            for (int j = 0; j < 3; j++) //1 RGB par sommet
+                vertData->append(0);
+        }
 }
 
 

@@ -2,6 +2,7 @@
 #define PARAMETRICCURVE_H
 
 #include "point.h"
+#include "segment.h"
 #include <QVector>
 
 class ParametricCurve
@@ -41,6 +42,14 @@ public:
     /** GETTERS **/
     Point getPoint(int numPoint);
     int getStart(), getSize(), getSizeCurveParam();
+
+
+private:
+    QVector<Point> control_pts;
+    QVector<Segment> control_seg;
+    int control_x, control_y, nb_segment, sizeCurveParam, start;
+    float red, green, blue, precision = 10;
+    bool isNeedCompute = true, showGrid = true;
 };
 
 #endif // PARAMETRICCURVE_H

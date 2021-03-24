@@ -79,11 +79,8 @@ float Segment::length() const
 void Segment::createSegment(QVector<GLfloat> *vertData)
 {
 
-
-    std::cout << " ici  : " << this->pointList[0].getX()<< std::endl;
-
     GLfloat vertices[6];
-        GLfloat colors[6];
+    GLfloat colors[6];
 
         //VStart
         vertices[0] = this->pointList[0].getX();

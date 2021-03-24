@@ -17,42 +17,47 @@
    <string>TP M1GIG</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="myOpenGLWidget" name="openGLWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>541</width>
-      <height>431</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="myOpenGLWidget" name="openGLWidget"/>
+    </item>
+   </layout>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>904</width>
-     <height>22</height>
+     <height>15</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>Menu</string>
+     <string>Fichier</string>
     </property>
+    <addaction name="settingsAction"/>
+    <addaction name="importAction"/>
+    <addaction name="exportAction"/>
    </widget>
    <addaction name="menu"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <action name="settingsAction">
+   <property name="text">
+    <string>Paramètres</string>
+   </property>
+  </action>
+  <action name="importAction">
+   <property name="text">
+    <string>Importer...</string>
+   </property>
+  </action>
+  <action name="exportAction">
+   <property name="text">
+    <string>Exporter...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

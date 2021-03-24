@@ -156,77 +156,77 @@ void myOpenGLWidget::resizeGL(int w, int h)
 
 void myOpenGLWidget::paintGL()
 {
-	qDebug() << __FUNCTION__ ;
+    qDebug() << __FUNCTION__ ;
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_program->bind(); // active le shader program
-
-
-	/// Ajout RR pour gérer les 3 matrices utiles
-	/// à mettre dans doProjection() pour clarifier
-	/// -----------------------------------------
-		m_modelView.setToIdentity();
-		m_modelView.lookAt(QVector3D(0.0f, 0.0f, 3.0f),    // Camera Position
-						 QVector3D(0.0f, 0.0f, 0.0f),    // Point camera looks towards
-						 QVector3D(0.0f, 1.0f, 0.0f));   // Up vector
-
-		m_projection.setToIdentity ();
-		m_projection.perspective(70.0, width() / height(), 0.1, 100.0); //ou m_ratio
-
-		//m_model.translate(0, 0, -3.0);
-
-        m_modelView.translate(m_x,m_y,m_z);
-                // Rotation de la scène pour l'animation
-                m_modelView.rotate(m_angleX, 1, 0, 0);
-                m_modelView.rotate(m_angleY, 0, 1, 0);
-                m_modelView.rotate(m_angleZ, 0, 0, 1);
-
-                QMatrix4x4 m = m_projection * m_modelView * m_model;
-                QMatrix3x3 normal_mat = m_modelView.normalMatrix();
-            ///----------------------------
-
-            m_program->setUniformValue("matrix", m);
-            m_program->setUniformValue("norMatrix", normal_mat);
-
-            m_program->setAttributeBuffer("posAttr", GL_FLOAT, 0 * sizeof(float), 3, 9 * sizeof(float));
-            m_program->setAttributeBuffer("colAttr", GL_FLOAT, 3 * sizeof(float), 3, 9 * sizeof(float));
-            m_program->setAttributeBuffer("norAttr", GL_FLOAT, 6 * sizeof(float), 3, 9 * sizeof(float));
-            m_program->enableAttributeArray("posAttr");
-            m_program->enableAttributeArray("colAttr");
-            m_program->enableAttributeArray("norAttr");
+        m_program->bind(); // active le shader program
 
 
-            glPointSize (10.0f);
-            if(showInterval){
-                glDrawArrays(GL_POINTS, 0, 1);
-            }
-            if(isEditing){
-                glDrawArrays(GL_POINTS, curve->getStart()+curve->getSize(), 1);
-                glDrawArrays(GL_POINTS, curve->getStart()+curve->getSize()+1, 1);
-            }
-            glPointSize (8.0f);
-            glLineWidth(4.0f);
+        /// Ajout RR pour gérer les 3 matrices utiles
+        /// à mettre dans doProjection() pour clarifier
+        /// -----------------------------------------
+            m_modelView.setToIdentity();
+            m_modelView.lookAt(QVector3D(0.0f, 0.0f, 3.0f),    // Camera Position
+                             QVector3D(0.0f, 0.0f, 0.0f),    // Point camera looks towards
+                             QVector3D(0.0f, 1.0f, 0.0f));   // Up vector
 
-            if(showControlsPts){
-                glDrawArrays(GL_POINTS, curve->getStart(), curve->getSizeCurveParam());
-                glDrawArrays(GL_LINES, curve->getStart(), curve->getSizeCurveParam());
-            }
-
-            glLineWidth(2.0f);
-            if(showGrid){
-                glDrawArrays(GL_LINES, curve->getStart()+curve->getSizeCurveParam(), curve->getSize()-curve->getSizeCurveParam());
-            }
-            else{
-                glDrawArrays(GL_TRIANGLES, curve->getStart()+curve->getSizeCurveParam(), curve->getSize()-curve->getSizeCurveParam());
-            }
+            m_projection.setToIdentity ();
+            m_projection.perspective(70.0, width() / height(), 0.1, 100.0); //ou m_ratio
 
 
+            //m_model.translate(0, 0, -3.0);
+            m_modelView.translate(m_x,m_y,m_z);
+            // Rotation de la scène pour l'animation
+            m_modelView.rotate(m_angleX, 1, 0, 0);
+            m_modelView.rotate(m_angleY, 0, 1, 0);
+            m_modelView.rotate(m_angleZ, 0, 0, 1);
 
-            m_program->disableAttributeArray("posAttr");
-            m_program->disableAttributeArray("colAttr");
+            QMatrix4x4 m = m_projection * m_modelView * m_model;
+            QMatrix3x3 normal_mat = m_modelView.normalMatrix();
+        ///----------------------------
 
-            m_program->release();
+        m_program->setUniformValue("matrix", m);
+        m_program->setUniformValue("norMatrix", normal_mat);
+
+        m_program->setAttributeBuffer("posAttr", GL_FLOAT, 0 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+        m_program->setAttributeBuffer("colAttr", GL_FLOAT, 3 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+        m_program->setAttributeBuffer("norAttr", GL_FLOAT, 6 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+        m_program->enableAttributeArray("posAttr");
+        m_program->enableAttributeArray("colAttr");
+        m_program->enableAttributeArray("norAttr");
+
+
+        glPointSize (10.0f);
+        if(showInterval){
+            glDrawArrays(GL_POINTS, 0, 1);
+        }
+        if(isEditing){
+            glDrawArrays(GL_POINTS, curve->getStart()+curve->getSize(), 1);
+            glDrawArrays(GL_POINTS, curve->getStart()+curve->getSize()+1, 1);
+        }
+        glPointSize (8.0f);
+        glLineWidth(4.0f);
+
+        if(showControlsPts){
+            glDrawArrays(GL_POINTS, curve->getStart(), curve->getSizeCurveParam());
+            glDrawArrays(GL_LINES, curve->getStart(), curve->getSizeCurveParam());
+        }
+
+        glLineWidth(2.0f);
+        if(showGrid){
+            glDrawArrays(GL_LINES, curve->getStart()+curve->getSizeCurveParam(), curve->getSize()-curve->getSizeCurveParam());
+        }
+        else{
+            glDrawArrays(GL_TRIANGLES, curve->getStart()+curve->getSizeCurveParam(), curve->getSize()-curve->getSizeCurveParam());
+        }
+
+
+
+        m_program->disableAttributeArray("posAttr");
+        m_program->disableAttributeArray("colAttr");
+
+        m_program->release();
 }
 
 void myOpenGLWidget::keyPressEvent(QKeyEvent *ev)

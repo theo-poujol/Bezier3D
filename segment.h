@@ -27,7 +27,7 @@ public:
 
 	Segment& operator= (const Segment &);
 
-    void makeObject(QVector<GLfloat> *vertex_data);
+    void createSegment(QVector<GLfloat> *vertex_data);
 
 	void setStart(const Point&);
 	void setEnd(const Point&);

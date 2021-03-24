@@ -118,14 +118,14 @@ void myOpenGLWidget::makeGLObjects()
     int decal=0;
         QVector<GLfloat> vertData;
         if(showInterval){
-            G= curve->SurfaceBezier(u, v, control_x, control_y);
+            G= curve->bezierArea(u, v, control_x, control_y);
             G->setRgb(1,0,1);
             G->createPointSingle(&vertData);   decal+=1;
         }
-        curve->makeObject(&vertData);     curve->setStart(decal);    decal+=curve->getSize();
+        curve->createCurve(&vertData);     curve->setStart(decal);    decal+=curve->getSize();
 
 
-        if(editing){
+        if(isEditing){
             E->createPointSingle(&vertData);
             F->createPointSingle(&vertData);
             decal+=2;
@@ -209,16 +209,16 @@ void myOpenGLWidget::paintGL()
             glLineWidth(4.0f);
 
             if(showControlsPts){
-                glDrawArrays(GL_POINTS, curve->getStart(), curve->getSizeCourbeParam());
-                glDrawArrays(GL_LINES, curve->getStart(), curve->getSizeCourbeParam());
+                glDrawArrays(GL_POINTS, curve->getStart(), curve->getSizeCurveParam());
+                glDrawArrays(GL_LINES, curve->getStart(), curve->getSizeCurveParam());
             }
 
             glLineWidth(2.0f);
             if(showGrid){
-                glDrawArrays(GL_LINES, curve->getStart()+curve->getSizeCourbeParam(), curve->getSize()-curve->getSizeCourbeParam());
+                glDrawArrays(GL_LINES, curve->getStart()+curve->getSizeCurveParam(), curve->getSize()-curve->getSizeCurveParam());
             }
             else{
-                glDrawArrays(GL_TRIANGLES, curve->getStart()+curve->getSizeCourbeParam(), curve->getSize()-curve->getSizeCourbeParam());
+                glDrawArrays(GL_TRIANGLES, curve->getStart()+curve->getSizeCurveParam(), curve->getSize()-curve->getSizeCurveParam());
             }
 
 
@@ -569,8 +569,4 @@ int myOpenGLWidget::getControl_x(){
 
 int myOpenGLWidget::getControl_y(){
     return this->control_y;
-
-
-
-
-
+}

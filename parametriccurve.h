@@ -45,8 +45,8 @@ public:
 
 
 private:
-    QVector<Point> control_pts;
-    QVector<Segment> control_seg;
+    QVector<Point> control_pts, pointList;
+    QVector<Segment> control_seg, segmentList;
     int control_x, control_y, nb_segment, sizeCurveParam, start;
     float red, green, blue, precision = 10;
     bool isNeedCompute = true, showGrid = true;

@@ -1,4 +1,5 @@
 #include "parametriccurve.h"
+#include <QVector3D>
 
 ParametricCurve::ParametricCurve(QVector<Point> control_pts,int control_x,int control_y, float red, float green, float blue) {
 
@@ -89,3 +90,171 @@ Point* ParametricCurve::bezierArea(float u, float v, int n, int m) {
     }
     return p;
 }
+
+void ParametricCurve::createPointList() {
+    pointList.clear();
+    for(int i= 0; i <= precision; i++){
+        for(int j = 0; j <= precision; j++){
+            //qDebug() << "début des surfaces i : " << i << " j : " << j;
+            Point *tmp = bezierArea(i/precision, j/precision, control_x, control_y);
+            pointList.push_back(*tmp);
+        }
+    }
+}
+
+void ParametricCurve::setStart(int start) {
+    this->start = start;
+}
+
+
+int ParametricCurve::getStart() {
+    return this->start;
+}
+
+void ParametricCurve::setPrecision(int pas) {
+    precision=pas;
+    update();
+}
+
+int ParametricCurve::getSize() {
+    return (nb_segment+control_seg.size())*2;
+}
+
+int ParametricCurve::getSizeCurveParam() {
+    return control_seg.size()*2;
+}
+
+Point ParametricCurve::getPoint(int numPoint) {
+    return control_pts[numPoint];
+}
+
+void ParametricCurve::setPoint(int numPoint,Point p) {
+    control_pts[numPoint]=p;
+    update();
+}
+
+
+void ParametricCurve::setControlPointColor() {
+
+    for (int i=0;i<control_pts.size();++i) {
+        control_pts[i].setRgb(1.0, 0.0, 0.0);
+    }
+}
+
+
+void ParametricCurve::swapGridSurface(bool showGrid) {
+    this->showGrid=showGrid;
+    update();
+}
+
+void ParametricCurve::createControlSegment() {
+    control_seg.clear();
+    for (int j=0;j<control_y;++j) {
+        for(int i=0;i<control_x-1;++i){
+            control_seg.push_back(*new Segment(control_pts[control_x*j+i],control_pts[control_x*j+i+1]));
+        }
+    }
+    for (int j=0;j<control_x;++j) {
+        for(int i=0;i<control_y-1;++i){
+            control_seg.push_back(*new Segment(control_pts[i*control_x+j],control_pts[(i+1)*control_x+j]));
+        }
+    }
+}
+
+void ParametricCurve::update() {
+    setControlPointColor();
+    createControlSegment();
+    isNeedCompute=true;
+}
+
+
+void ParametricCurve::createCurve(QVector<GLfloat> *vertData) {
+    for(int i = 0; i < control_seg.size(); i++){
+        control_seg[i].createSegment(vertData);
+    }
+    if(isNeedCompute){
+        isNeedCompute=false;
+        createPointList();
+
+        if(showGrid){
+            segmentList.clear();
+            for(int i= 0; i <= precision; i++){
+                for(int j = 0; j < precision; j++){
+                    Segment *tmp = new Segment(pointList[i*(precision+1)+j], pointList[i*(precision+1)+j+1]);
+                    segmentList.push_back(*tmp);
+                }
+            }
+            for(int i= 0; i <= precision; i++){
+                for(int j = 0; j < precision; j++){
+                    Segment *tmp = new Segment(pointList[i+j*(precision+1)], pointList[i+(j+1)*(precision+1)]);
+                    segmentList.push_back(*tmp);
+                }
+            }
+            nb_segment = 2*precision*(precision+1);
+        }
+    }
+    if(showGrid){
+        for(int i = 0; i < nb_segment; i++){
+            segmentList[i].createSegment(vertData);
+        }
+    }
+    else{
+        for(int i= 0; i < precision; i++){
+            for(int j = 0; j < precision; j++){
+                int A=(i+0)*(precision+1)+(j+0);
+                int B=(i+0)*(precision+1)+(j+1);
+                int C=(i+1)*(precision+1)+(j+0);
+                int D=(i+1)*(precision+1)+(j+1);
+
+                QVector3D vAB(pointList[B].getX()-pointList[A].getX(),pointList[B].getY()-pointList[A].getY(),pointList[B].getZ()-pointList[A].getZ());
+                QVector3D vAC(pointList[C].getX()-pointList[A].getX(),pointList[C].getY()-pointList[A].getY(),pointList[C].getZ()-pointList[A].getZ());
+                QVector3D vDB(pointList[B].getX()-pointList[D].getX(),pointList[B].getY()-pointList[D].getY(),pointList[B].getZ()-pointList[D].getZ());
+                QVector3D vDC(pointList[C].getX()-pointList[D].getX(),pointList[C].getY()-pointList[D].getY(),pointList[C].getZ()-pointList[D].getZ());
+
+                QVector3D nABC = -QVector3D::normal(vAC, vAB);
+                QVector3D nBDC = -QVector3D::normal(vDB, vDC);
+                QVector3D nBC = (nABC+nBDC)/2;
+
+                pointList[A].createPoint(vertData);
+                vertData->append(nABC.x());vertData->append(nABC.y());vertData->append(nABC.z());
+
+                pointList[B].createPoint(vertData);
+                vertData->append(nBC.x());vertData->append(nBC.y());vertData->append(nBC.z());
+
+                pointList[C].createPoint(vertData);
+                vertData->append(nBC.x());vertData->append(nBC.y());vertData->append(nBC.z());
+
+                pointList[B].createPoint(vertData);
+                vertData->append(nBC.x());vertData->append(nBC.y());vertData->append(nBC.z());
+
+                pointList[C].createPoint(vertData);
+                vertData->append(nBC.x());vertData->append(nBC.y());vertData->append(nBC.z());
+
+                pointList[D].createPoint(vertData);
+                vertData->append(nBDC.x());vertData->append(nBDC.y());vertData->append(nBDC.z());
+            }
+        }
+        nb_segment=3*precision*precision;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

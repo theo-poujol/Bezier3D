@@ -62,7 +62,7 @@ private:
     Point *E,*F,*G;
     QVector<Point> control_pts;
     int control_x, control_y, nb_points;
-    ParametricCurve curve;
+    ParametricCurve *curve;
     bool    isEditing       = false,
             isDrawing       = true,
             showInterval    = false,

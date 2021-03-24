@@ -78,7 +78,7 @@ float Segment::length() const
 void Segment::createSegment(QVector<GLfloat> *vertData)
 {
     GLfloat vertices[6];
-    GLfloat rgb[6];
+    GLfloat colors[6];
 
     //VStart
     vertices[0] = getStart().getX();
@@ -91,14 +91,14 @@ void Segment::createSegment(QVector<GLfloat> *vertData)
     vertices[5] = getEnd().getZ();
 
     //CStart
-    rgb[0] = getStart().getRgb()[0];
-    rgb[1] = getStart().getRgb()[1];
-    rgb[2] = getStart().getRgb()[2];
+    colors[0] = getStart().getRgb()[0];
+    colors[1] = getStart().getRgb()[0];
+    colors[2] = getStart().getRgb()[0];
 
     //CEnd
-    rgb[3] = getEnd().getRgb()[0];
-    rgb[4] = getEnd().getRgb()[1];
-    rgb[5] = getEnd().getRgb()[2];
+    colors[3] = getEnd().getRgb()[0];
+    colors[4] = getEnd().getRgb()[0];
+    colors[5] = getEnd().getRgb()[0];
 
     for (int i = 0; i < 2; ++i) { //2 sommets
         // coordonnées sommets
@@ -106,7 +106,7 @@ void Segment::createSegment(QVector<GLfloat> *vertData)
             vertData->append(vertices[i*3+j]);
         // couleurs sommets
         for (int j = 0; j < 3; j++) //1 RGB par sommet
-            vertData->append(rgb[i*3+j]*10);
+            vertData->append(colors[i*3+j]*10);
 
         for (int j = 0; j < 3; j++) //1 RGB par sommet
             vertData->append(0);

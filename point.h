@@ -33,6 +33,7 @@ public:
 	float getX() const;
 	float getY() const;
 	float getZ() const ;
+    float * getCoords();
     float * getRgb();
 	void get(float *) const;
 

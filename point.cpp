@@ -53,9 +53,14 @@ float Point::getZ() const
 	return getN(2);
 }
 
-float Point::getRgb() {
+float * Point::getCoords() {
+    return this->coords;
+}
+
+float * Point::getRgb() {
     return this->rgb;
 }
+
 void Point::get(float * t) const
 {
 	for (unsigned i=0; i<3; ++i)
@@ -80,6 +85,30 @@ void Point::set(const float * t)
 {
 	for (unsigned i=0; i<3; ++i)
 		coords[i] = t[i];
+}
+
+
+void Point::makeObject(QVector<GLfloat> *vertex_data){
+    vertex_data->append(getX());
+    vertex_data->append(getY());
+    vertex_data->append(getZ());
+
+    vertex_data->append(this->rgb[0]);
+    vertex_data->append(this->rgb[1]);
+    vertex_data->append(this->rgb[2]);
+}
+
+void Point::makeObjectSingle(QVector<GLfloat> *vertex_data){
+    vertex_data->append(getX());
+    vertex_data->append(getY());
+    vertex_data->append(getZ());
+
+    vertex_data->append(this->rgb[0]*10);
+    vertex_data->append(this->rgb[1]*10);
+    vertex_data->append(this->rgb[2]*10);
+
+    for(int i = 0; i < 3; i++)
+        vertex_data->append(0);
 }
 
 void Point::setX(const float& v)

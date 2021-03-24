@@ -176,46 +176,164 @@ void myOpenGLWidget::paintGL()
 
 		//m_model.translate(0, 0, -3.0);
 
-		// Rotation de la scène pour l'animation
-		m_model.rotate(m_angle, 0, 1, 0);
+        m_modelView.translate(m_x,m_y,m_z);
+                // Rotation de la scène pour l'animation
+                m_modelView.rotate(m_angleX, 1, 0, 0);
+                m_modelView.rotate(m_angleY, 0, 1, 0);
+                m_modelView.rotate(m_angleZ, 0, 0, 1);
 
-		QMatrix4x4 m = m_projection * m_modelView * m_model;
-	///----------------------------
+                QMatrix4x4 m = m_projection * m_modelView * m_model;
+                QMatrix3x3 normal_mat = m_modelView.normalMatrix();
+            ///----------------------------
 
-	m_program->setUniformValue("matrix", m);
+            m_program->setUniformValue("matrix", m);
+            m_program->setUniformValue("norMatrix", normal_mat);
 
-	m_program->setAttributeBuffer("posAttr", GL_FLOAT, 0, 3, 6 * sizeof(GLfloat));
-	m_program->setAttributeBuffer("colAttr", GL_FLOAT, 3 * sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
-	m_program->enableAttributeArray("posAttr");
-	m_program->enableAttributeArray("colAttr");
+            m_program->setAttributeBuffer("posAttr", GL_FLOAT, 0 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+            m_program->setAttributeBuffer("colAttr", GL_FLOAT, 3 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+            m_program->setAttributeBuffer("norAttr", GL_FLOAT, 6 * sizeof(GLfloat), 3, 9 * sizeof(GLfloat));
+            m_program->enableAttributeArray("posAttr");
+            m_program->enableAttributeArray("colAttr");
+            m_program->enableAttributeArray("norAttr");
 
-	glPointSize (5.0f);
-	glDrawArrays(GL_POINTS, 0, 2);
 
-	m_program->disableAttributeArray("posAttr");
-	m_program->disableAttributeArray("colAttr");
+            glPointSize (10.0f);
+            if(showInterval){
+                glDrawArrays(GL_POINTS, 0, 1);
+            }
+            if(isEditing){
+                glDrawArrays(GL_POINTS, curve->getStart()+curve->getSize(), 1);
+                glDrawArrays(GL_POINTS, curve->getStart()+curve->getSize()+1, 1);
+            }
+            glPointSize (8.0f);
+            glLineWidth(4.0f);
 
-	m_program->release();
+            if(showControlsPts){
+                glDrawArrays(GL_POINTS, curve->getStart(), curve->getSizeCourbeParam());
+                glDrawArrays(GL_LINES, curve->getStart(), curve->getSizeCourbeParam());
+            }
+
+            glLineWidth(2.0f);
+            if(showGrid){
+                glDrawArrays(GL_LINES, curve->getStart()+curve->getSizeCourbeParam(), curve->getSize()-curve->getSizeCourbeParam());
+            }
+            else{
+                glDrawArrays(GL_TRIANGLES, curve->getStart()+curve->getSizeCourbeParam(), curve->getSize()-curve->getSizeCourbeParam());
+            }
+
+
+
+            m_program->disableAttributeArray("posAttr");
+            m_program->disableAttributeArray("colAttr");
+
+            m_program->release();
 }
 
 void myOpenGLWidget::keyPressEvent(QKeyEvent *ev)
 {
 	qDebug() << __FUNCTION__ << ev->text();
 
-	switch(ev->key()) {
-		case Qt::Key_Z :
-			m_angle += 1;
-			if (m_angle >= 360) m_angle -= 360;
-			update();
-			break;
-		case Qt::Key_A :
-			if (m_timer->isActive())
-				m_timer->stop();
-			else m_timer->start();
-			break;
-		case Qt::Key_R :
-			break;
-	}
+    switch(ev->key()) {
+            case Qt::Key_6 :
+                rotateRight();
+                break;
+            case Qt::Key_4 :
+                rotateLeft();
+                break;
+            case Qt::Key_5 :
+                rotateBackward();
+                break;
+            case Qt::Key_8 :
+                rotateForward();
+                break;
+            case Qt::Key_7 :
+                m_angleZ += 1;
+                if (m_angleZ >= 360) m_angleZ -= 360;
+                update();
+                break;
+            case Qt::Key_9 :
+                m_angleZ -= 1;
+                if (m_angleZ <= -1) m_angleZ += 360;
+                update();
+                break;
+            case Qt::Key_A :
+                toggleControlPolygon();
+                break;
+            case Qt::Key_E :
+                toggleSurface();
+                break;
+            case Qt::Key_S :
+                translateBackward();
+                break;
+            case Qt::Key_Z :
+                translateForward();
+                break;
+            case Qt::Key_Q :
+                translateLeft();
+                break;
+            case Qt::Key_D :
+                translateRight();
+                break;
+            case Qt::Key_F:
+                if(isEditing){
+                    dy-=0.1;
+                    makeGLObjects();
+                }else{
+                    m_y+=0.1f;
+                }
+                    update();
+                    break;
+            case Qt::Key_R:
+                if(isEditing){
+                    dy+=0.1;
+                    makeGLObjects();
+                }else{
+                    m_y-=0.1f;
+                }
+                    update();
+                    break;
+            case Qt::Key_Space:
+                editMode();
+                break;
+            case Qt::Key_Plus :
+                nextPoint();
+                break;
+            case Qt::Key_Minus :
+                previousPoint();
+                break;
+            case Qt::Key_Right :
+                nextPoint_x();
+                break;
+            case Qt::Key_Left :
+                previousPoint_x();
+                break;
+            case Qt::Key_Up :
+                nextPoint_y();
+                break;
+            case Qt::Key_Down :
+                previousPoint_y();
+                break;
+            case Qt::Key_Escape :
+                if (isEditing){
+                    dx=0;
+                    dy=0;
+                    dz=0;
+                    makeGLObjects();
+                    update();
+                }else{
+                    qDebug()<< "x= " <<m_x<< "y= " <<m_y<< "z= " <<m_z;
+                    qDebug()<< "ax= " <<m_angleX<< "ay= " <<m_angleY<< "az= " <<m_angleZ;
+                    qDebug() << "press enter to rest";
+                }
+                break;
+            case Qt::Key_Return :
+                if (isEditing){
+                    applyPointChange();
+                }else{
+                    reset();
+                }
+                break;
+        }
 }
 
 void myOpenGLWidget::keyReleaseEvent(QKeyEvent *ev)

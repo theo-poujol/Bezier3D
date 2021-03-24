@@ -363,6 +363,213 @@ void myOpenGLWidget::onTimeout()
 	update();
 }
 
+void myOpenGLWidget::setPasHomogene(int value){
+    qDebug() << "Pas homogène: " << value;
+    curve->setPrecision(value);
+    makeGLObjects();
+    update();
+}
+void myOpenGLWidget::setU(double value){
+    u=value;
+    qDebug() << "U: " << value;
+    makeGLObjects();
+    update();
+}
+void myOpenGLWidget::setV(double value){
+    v=value;
+    qDebug() << "V: " << value;
+    makeGLObjects();
+    update();
+}
+void myOpenGLWidget::translateForward(){
+    if(isEditing){
+        dz-=0.1;
+        makeGLObjects();
+    }else{
+        m_z+=0.1f;
+    }
+    update();
+}
+void myOpenGLWidget::translateLeft(){
+    if(isEditing){
+        dx-=0.1;
+        makeGLObjects();
+    }else{
+        m_x+=0.1f;
+    }
+    update();
+}
+void myOpenGLWidget::translateRight(){
+    if(isEditing){
+        dx+=0.1;
+        makeGLObjects();
+    }else{
+        m_x-=0.1f;
+    }
+    update();
+}
+void myOpenGLWidget::translateBackward(){
+    if(isEditing){
+        dz+=0.1;
+        makeGLObjects();
+    }else{
+        m_z-=0.1f;
+    }
+    update();
+}
+void myOpenGLWidget::rotateForward(){
+    m_angleX -= 1;
+    if (m_angleX <= -1) m_angleX += 360;
+    update();
+}
+void myOpenGLWidget::rotateLeft(){
+    m_angleY -= 1;
+    if (m_angleY <= -1) m_angleY += 360;
+    update();
+}
+void myOpenGLWidget::rotateRight(){
+    m_angleY += 1;
+    if (m_angleY >= 360) m_angleY -= 360;
+    update();
+}
+void myOpenGLWidget::rotateBackward(){
+    m_angleX += 1;
+    if (m_angleX >= 360) m_angleX -= 360;
+    update();
+}
+void myOpenGLWidget::reset(){
+        m_x=0;
+        m_y=0;
+        m_z=0;
+        m_angleX=0;
+        m_angleY=0;
+        m_angleZ=0;
+        update();
+}
+
+void myOpenGLWidget::applyPointChange(){
+    if (isEditing){
+        isEditing=false;
+        control_pts[nb_points]=*F;
+        curve->setPoint(nb_points,*F);
+        dx=0;
+        dy=0;
+        dz=0;
+        makeGLObjects();
+        update();
+    }
+}
+
+void myOpenGLWidget::editMode(){
+    isEditing=!isEditing;
+    makeGLObjects();
+    update();
+}
+
+void myOpenGLWidget::previousPoint(){
+    if (isEditing){
+        dx=0;
+        dy=0;
+        dz=0;
+        nb_points--;
+        if(nb_points<0)
+            nb_points=control_x*control_y-1;
+        makeGLObjects();
+        update();
+    }
+}
+void myOpenGLWidget::nextPoint(){
+    if (isEditing){
+        dx=0;
+        dy=0;
+        dz=0;
+        nb_points++;
+        if(nb_points>=control_x*control_y)
+            nb_points=0;
+        makeGLObjects();
+        update();
+    }
+}
+
+void myOpenGLWidget::previousPoint_x(){
+    if (isEditing){
+        dx=0;
+        dy=0;
+        dz=0;
+        nb_points--;
+        if(nb_points<0 || nb_points%control_x==control_x-1)
+            nb_points+=control_x;
+        makeGLObjects();
+        update();
+    }
+}
+void myOpenGLWidget::nextPoint_x(){
+    if (isEditing){
+        dx=0;
+        dy=0;
+        dz=0;
+        nb_points++;
+        if(nb_points%control_x==0)
+            nb_points-=control_x;
+        makeGLObjects();
+        update();
+    }
+}
+
+void myOpenGLWidget::previousPoint_y(){
+    if (isEditing){
+        dx=0;
+        dy=0;
+        dz=0;
+        control_x-=control_x;
+        if(nb_points<0)
+            nb_points+=control_x*control_y;
+        makeGLObjects();
+        update();
+    }
+}
+void myOpenGLWidget::nextPoint_y(){
+    if (isEditing){
+        dx=0;
+        dy=0;
+        dz=0;
+        nb_points+=control_x;
+        if(nb_points>=control_x*control_y)
+            nb_points-=control_x*control_y;
+        makeGLObjects();
+        update();
+    }
+}
+
+void myOpenGLWidget::showIntervalParametrique(bool show){
+    showInterval=show;
+    makeGLObjects();
+    update();
+}
+
+void myOpenGLWidget::toggleControlPolygon(){
+    showControlsPts= !showControlsPts;
+    update();
+}
+
+void myOpenGLWidget::toggleSurface(){
+    showGrid=!showGrid;
+    curve->swapGridSurface(showGrid);
+    makeGLObjects();
+    update();
+}
+
+QVector<Point> myOpenGLWidget::getControls_pts(){
+    return this->control_pts;
+}
+
+int myOpenGLWidget::getControl_x(){
+    return this->control_x;
+}
+
+int myOpenGLWidget::getControl_y(){
+    return this->control_y;
+
 
 
 

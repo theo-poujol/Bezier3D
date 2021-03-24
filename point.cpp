@@ -2,20 +2,40 @@
 
 Point::Point()
 {
-	coords = new float[3];
+    this->coords = new float[3];
+    this->rgb = new float[3];
 }
 
 Point::~Point()
 {
-	delete [] coords;
-	coords = nullptr;
+    delete [] this->coords;
+    this->coords = nullptr;
+    delete [] this->rgb;
+    this->rgb = nullptr;
 }
 
 Point::Point(const Point& p)
 {
 	coords = new float[3];
-	for (unsigned i=0; i<3; ++i)
-		coords[i] = p.coords[i];
+    this->rgb = new float[3];
+    for (unsigned i=0; i<3; ++i) {
+        coords[i] = p.coords[i];
+        this->rgb[i] = p.rgb[i];
+    }
+
+}
+
+Point::Point(float x, float y, float z, float red, float green, float blue) {
+    this->coords = new float[3];
+    this->rgb = new float[3];
+
+    this->coords[0] = x;
+    this->coords[1] = y;
+    this->coords[2] = z;
+
+    this->rgb[0] = red;
+    this->rgb[1] = green;
+    this->rgb[2] = blue;
 }
 
 float Point::getX() const
@@ -33,6 +53,9 @@ float Point::getZ() const
 	return getN(2);
 }
 
+float Point::getRgb() {
+    return this->rgb;
+}
 void Point::get(float * t) const
 {
 	for (unsigned i=0; i<3; ++i)
@@ -80,7 +103,3 @@ Point& Point::operator= (const Point &p)
 return *this;
 }
 
-std::ostream& operator<<(std::ostream& out, const Point& p)
-{
-	return out << "[ " << p.coords[0] << " " << p.coords[1] << " " << p.coords[2] << " ]"; // can access private member Y::data
-}

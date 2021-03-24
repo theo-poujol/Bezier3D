@@ -17,12 +17,13 @@ class Point
 {
 private:
 	float * coords;
+    float * rgb;
 
 public:
 	Point();
 	~Point();
 	Point(const Point&);
-
+    Point(float x, float y, float z, float red, float green, float blue);
 
     /* Opérateurs de calculs entre deux points */
 	Point& operator= (const Point &);
@@ -32,6 +33,7 @@ public:
 	float getX() const;
 	float getY() const;
 	float getZ() const ;
+    float * getRgb();
 	void get(float *) const;
 
 	void setN(unsigned, const float&);

@@ -1,9 +1,13 @@
 #ifndef MYOPENGLWIDGET_H
 #define MYOPENGLWIDGET_H
 
+
+#include "point.h"
+#include "parametriccurve.h"
+
 #include <QObject>
 #include <QWidget>
-
+#include <QVector>
 #include <QKeyEvent>
 #include <QTimer>
 #include <QOpenGLWidget>
@@ -52,6 +56,16 @@ private:
 
 	QOpenGLShaderProgram *m_program;
 	QOpenGLBuffer m_vbo;
+
+    Point *E,*F,*G;
+    QVector<Point> control_pts;
+    int control_x, control_y, nb_points;
+    ParametricCurve curve;
+    bool    isEditing       = false,
+            isDrawing       = true,
+            showInterval    = false,
+            showGrid        = false,
+            showControlsPts = true;
 
 	void makeGLObjects();
 	void tearGLObjects();

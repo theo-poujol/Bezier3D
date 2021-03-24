@@ -76,6 +76,8 @@ void myOpenGLWidget::doProjection()
 
 void myOpenGLWidget::makeGLObjects()
 {
+
+
 	//1 Nos objets géométriques
 	Point A, B;
 	float * coord = new float[3];

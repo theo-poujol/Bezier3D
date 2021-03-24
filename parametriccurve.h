@@ -18,6 +18,12 @@ public:
     void swapGridSurface(bool showGrid);
     void update();
 
+    /** FONCTIONS VECTEURS **/
+
+    QVector<float> subVec(QVector<float> p1, QVector<float> p2);
+    QVector<float> mulVec(QVector<float> p1, QVector<float> p2);
+    float scalar(std::vector<float> p1, std::vector<float> p2);
+
     /** SETTERS **/
     void setControlPointColor();
     void setStart(int start);

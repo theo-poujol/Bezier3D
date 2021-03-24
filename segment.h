@@ -16,14 +16,18 @@ class Segment
 {
 private:
 	Point * pointList;
+    int start;
+    int size;
 public:
 	Segment();
 	~Segment();
 
 	Segment(const Segment&);
+    Segment(Point p1, Point p2);
 
 	Segment& operator= (const Segment &);
 
+    void makeObject(QVector<GLfloat> *vertex_data);
 
 	void setStart(const Point&);
 	void setEnd(const Point&);
@@ -34,6 +38,10 @@ public:
 	Point getEnd() const;
 
 	float length() const;
+
+    Point getStart();
+    Point getEnd();
+    int getSize();
 
 	friend std::ostream& operator<<(std::ostream&, const Segment&);
 };

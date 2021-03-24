@@ -52,7 +52,7 @@ public:
 
 
     /* SETTERS : Rgb */
-    void setRgb(const float * t);
+    void setRgb(const float * rgb);
     void setRgb(float red, float green, float blue);
 
     void makeObject(QVector<GLfloat> *vertex_data);

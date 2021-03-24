@@ -67,8 +67,43 @@ private:
             showGrid        = false,
             showControlsPts = true;
 
+    double m_angleX = 0, m_angleY = 0, m_angleZ = 0;
+    double m_x=0, m_y=0, m_z=0;
+    double dx=0,dy=0,dz=0;
+    double u=0,v=0;
+
 	void makeGLObjects();
 	void tearGLObjects();
+
+private slots:
+    void setPasHomogene(int value);
+    void setU(double value);
+    void setV(double value);
+    void showIntervalParametrique(bool show);
+
+    void translateForward();
+    void translateLeft();
+    void translateRight();
+    void translateBackward();
+
+    void rotateForward();
+    void rotateLeft();
+    void rotateRight();
+    void rotateBackward();
+
+    void reset();
+    void editMode();
+
+    void previousPoint();
+    void nextPoint();
+    void previousPoint_x();
+    void nextPoint_x();
+    void previousPoint_y();
+    void nextPoint_y();
+    void applyPointChange();
+
+    void toggleControlPolygon();
+    void toggleSurface();
 };
 
 

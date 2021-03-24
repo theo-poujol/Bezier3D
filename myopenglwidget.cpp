@@ -77,80 +77,63 @@ void myOpenGLWidget::doProjection()
 void myOpenGLWidget::makeGLObjects()
 {
 
+    if (isDrawing) {                  //   x     y     z    r    g    b
+        control_pts.push_back(*new Point(-1.0, -0.5, +1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-0.3, -0.5, +1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+0.3, -0.5, +1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+1.0, -0.5, +1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-1.0, -0.5, +0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-0.3, +1.5, +0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+0.3, +1.5, +0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+1.0, -0.5, +0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-1.0, -0.5, -0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-0.3, +0.5, -0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+0.3, +0.5, -0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+1.0, -0.5, -0.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-1.0, -0.5, -1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(-0.3, -0.5, -1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+0.3, -0.5, -1.5, 1, 1, 1));
+        control_pts.push_back(*new Point(+1.0, -0.5, -1.5, 1, 1, 1));
+        control_x=4;
+        control_y=4;
+        E = new Point(0.0, 0.0, 0.0,0,1,1);
+        F = new Point(0.0, 0.0, 0.0,0,1,1);
+        G = new Point(0.0, 0.0, 0.0,1,0,1);
+        curve = new ParametricCurve(control_pts,control_x,control_y, 0.0, 0.8, 0.0);
+        isDrawing=false;
+    }
 
-	//1 Nos objets géométriques
-	Point A, B;
-	float * coord = new float[3];
+    else{
 
-	coord[0] = 0.0f;
-	coord[1] = 0.0f;
-	coord[2] = 0.0f;
+        if(isEditing){
+            *E = curve->getPoint(nb_points);
+            E->setRgb(0,1,1);
+            F->setX(dx);
+            F->setY(dy);
+            F->setZ(dz);
+            (*F) += (*E);
+        }
+    }
 
-	A.set (coord);
+    int decal=0;
+        QVector<GLfloat> vertData;
+        if(showInterval){
+            G= curve->SurfaceBezier(u, v, control_x, control_y);
+            G->setRgb(1,0,1);
+            G->createPointSingle(&vertData);   decal+=1;
+        }
+        curve->makeObject(&vertData);     curve->setStart(decal);    decal+=curve->getSize();
 
-	coord[0] = 1.0f;
-	coord[1] = 0.0f;
-	coord[2] = 0.0f;
 
-	B.set(coord);
-
-	Segment S;
-	S.setStart(A);
-	S.setEnd(B);
-
-	delete [] coord;
-
-	//qDebug() << "segment length " << S.length ();
-
-	//2 Traduction en tableaux de floats
-	GLfloat * vertices = new GLfloat[6]; //2 sommets
-	GLfloat * colors = new GLfloat[6]; //1 couleur (RBG) par sommet
-
-	Point begin, end;
-	float * values = new float[3];
-
-	begin = S.getStart ();
-	begin.get(values);
-	for (unsigned i=0; i<3; ++i)
-		vertices[i] = values[i];
-
-	end = S.getEnd ();
-	end.get(values);
-	for (unsigned i=0; i<3; ++i)
-		vertices[3+i] = values[i];
-
-	delete[] values;
-
-	//couleur0 = rouge
-	colors[0] = 1.0;
-	colors[1] = 0.0;
-	colors[2] = 0.0;
-
-	//bleu
-	colors[3] = 0.0;
-	colors[4] = 0.0;
-	colors[5] = 1.0;
-
-	//3 spécialisation OpenGL
-	QVector<GLfloat> vertData;
-	for (int i = 0; i < 2; ++i) { //2 sommets
-		// coordonnées sommets
-		for (int j = 0; j < 3; j++) //3 coords par sommet
-			vertData.append(vertices[i*3+j]);
-		// couleurs sommets
-		for (int j = 0; j < 3; j++) //1 RGB par sommet
-			vertData.append(colors[i*3+j]);
-	}
-
-	//destruction des éléments de la phase 2
-	delete [] vertices;
-	delete [] colors;
-
-	m_vbo.create();
-	m_vbo.bind();
-
-	//qDebug() << "vertData " << vertData.count () << " " << vertData.data ();
-	m_vbo.allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
+        if(editing){
+            E->createPointSingle(&vertData);
+            F->createPointSingle(&vertData);
+            decal+=2;
+        }
+        m_vbo.create();
+        m_vbo.bind();
+        //qDebug() << "vertData " << vertData.count () << " " << vertData.data ();
+        m_vbo.allocate(vertData.constData(), vertData.count() * sizeof(GLfloat));
 }
 
 

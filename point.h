@@ -11,6 +11,7 @@
 #define POINT_H
 
 #include <iostream>
+#include <QOpenGLWidget>
 
 class Point
 {
@@ -22,8 +23,10 @@ public:
 	~Point();
 	Point(const Point&);
 
-	Point& operator= (const Point &);
 
+    /* Opérateurs de calculs entre deux points */
+	Point& operator= (const Point &);
+    Point& operator+= (const Point &p);
 
 	float getN(unsigned) const;
 	float getX() const;
@@ -36,8 +39,10 @@ public:
 	void setY(const float&);
 	void setZ(const float&);
 	void set(const float *);
-
-	friend std::ostream& operator<<(std::ostream&, const Point&);
+    void setColor(const float * t);
+    void setColor(float red, float green, float blue);
+    void makeObject(QVector<GLfloat> *vertex_data);
+    void makeObjectSingle(QVector<GLfloat> *vertex_data);
 
 };
 

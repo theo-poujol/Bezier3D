@@ -55,8 +55,8 @@ public:
     void setRgb(const float * rgb);
     void setRgb(float red, float green, float blue);
 
-    void makeObject(QVector<GLfloat> *vertex_data);
-    void makeObjectSingle(QVector<GLfloat> *vertex_data);
+    void createPoint(QVector<GLfloat> *vertex_data);
+    void createPointSingle(QVector<GLfloat> *vertex_data);
 
 };
 

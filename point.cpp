@@ -99,7 +99,7 @@ void Point::setRgb(float red, float green, float blue) {
     this->rgb[2] = blue;
 }
 
-void Point::makeObject(QVector<GLfloat> *vertex_data){
+void Point::createPoint(QVector<GLfloat> *vertex_data){
     vertex_data->append(getX());
     vertex_data->append(getY());
     vertex_data->append(getZ());
@@ -109,7 +109,7 @@ void Point::makeObject(QVector<GLfloat> *vertex_data){
     vertex_data->append(this->rgb[2]);
 }
 
-void Point::makeObjectSingle(QVector<GLfloat> *vertex_data){
+void Point::createPointSingle(QVector<GLfloat> *vertex_data){
     vertex_data->append(getX());
     vertex_data->append(getY());
     vertex_data->append(getZ());
